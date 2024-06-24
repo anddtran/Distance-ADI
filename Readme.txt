@@ -4,7 +4,7 @@ This project includes a script for generating FIPS codes for a list of addresses
 
 ## Input File Requirements
 
-1. Data Excel File**: This file should contain at least one column named 'Address'. This column is case-sensitive and is used by the script to geocode addresses, generate FIPS codes, and calculate distances and ADI ranks.
+1. **Data Excel File**: This file should contain at least one column named 'Address'. This column is case-sensitive and is used by the script to geocode addresses, generate FIPS codes, and calculate distances and ADI ranks.
 
 ## Necessary Software and Libraries
 
@@ -23,11 +23,11 @@ This project includes a script for generating FIPS codes for a list of addresses
 
 2. Prepare the Data Excel File**:
    - Ensure the data Excel file contains an 'Address' column (case sensitive).
-   - Place the data Excel file in the same folder as the script.
+   - Place the data Excel file in the same folder as the script and name it `data.xlsx`.
 
 3. Run the Script**:
-   - When you run the script, you will be prompted to enter your Google Maps API key, the target address, and the path to the data Excel file.
-   - The ADI lookup CSV file should be in the same folder as the script.
+   - When you run the script, you will be prompted to enter your Google Maps API key and the target address.
+   - The ADI lookup CSV file (`US_2021_ADI_Census_Block_Group_v4_0_1.csv`) should be in the same folder as the script.
    - The final output file, `Updated_with_distance_ADI.xlsx`, will be generated in the same folder as the script.
 
 ## Additional Notes

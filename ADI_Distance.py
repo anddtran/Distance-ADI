@@ -9,10 +9,11 @@ import os
 # User input for configuration
 GOOGLE_MAPS_API_KEY = input("Enter your Google Maps API Key: ")
 TARGET_ADDRESS = input("Enter the target address: ")
-DATA_EXCEL_FILE_PATH = input("Enter the path to the data Excel file: ")
 
-# Set the paths to the ADI lookup CSV and the output Excel file in the same folder as the script
+
+# Set the paths to the data, ADI lookup CSV, and the output Excel file in the same folder as the script
 script_dir = os.path.dirname(os.path.abspath(__file__))
+DATA_EXCEL_FILE_PATH = os.path.join(script_dir,"data.xlsx")
 ADI_LOOKUP_CSV_PATH = os.path.join(script_dir, 'US_2021_ADI_Census_Block_Group_v4_0_1.csv')
 OUTPUT_EXCEL_FILE_PATH = os.path.join(script_dir, 'Updated_with_distance_ADI.xlsx')
 
