@@ -4,35 +4,31 @@ This project includes a script for generating FIPS codes for a list of addresses
 
 ## Input File Requirements
 
-1. **Data Excel File**: This file should contain at least one column named 'Address'. This column is case-sensitive and is used by the script to geocode addresses, generate FIPS codes, and calculate distances and ADI ranks.
+1. Data Excel File**: This file should contain at least one column named 'Address'. This column is case-sensitive and is used by the script to geocode addresses, generate FIPS codes, and calculate distances and ADI ranks.
 
 ## Necessary Software and Libraries
 
 - Python 3.10 or later
-- Libraries: pandas, geopandas, googlemaps, re, shapely, os
+- Libraries: pandas, googlemaps, re, requests, math, concurrent.futures, os
 
 ## Other Necessary Files and Keys
 
 - Google Maps API key
 - ADI lookup CSV file - included in the project folder, but can also be downloaded from [Neighborhood Atlas](https://www.neighborhoodatlas.medicine.wisc.edu/)
-- Census block group shapefiles for each state included in the data set, available from the Census Bureau: [Census Bureau Shapefiles](https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2023&layergroup=Block+Groups)
 
 ## Steps
 
 1. Create a Google Account and Generate an API Key for Google Maps**:
    - Follow Google's documentation to create an API key for accessing the Google Maps services.
 
-2. Prepare the Census Block Group Shapefiles**:
-   - Download the shapefiles for each state you're interested in from the provided Census Bureau link.
-   - Place each state's folder from the website into the parent folder along with the combined script.
+2. Prepare the Data Excel File**:
+   - Ensure the data Excel file contains an 'Address' column (case sensitive).
+   - Place the data Excel file in the same folder as the script.
 
-3. Prepare the Data Excel File**:
-   - Place the data Excel file in the parent folder. Ensure that there is an 'Address' column (case sensitive).
-
-4. Update and Run the Combined Script**:
-   - Update the file paths and API key in the combined script.
-   - For the folders section, place the file path to each folder for each state.
-   - Run the script. The final output file will be `Updated_with_distance_ADI.xlsx`.
+3. Run the Script**:
+   - When you run the script, you will be prompted to enter your Google Maps API key, the target address, and the path to the data Excel file.
+   - The ADI lookup CSV file should be in the same folder as the script.
+   - The final output file, `Updated_with_distance_ADI.xlsx`, will be generated in the same folder as the script.
 
 ## Additional Notes
 
