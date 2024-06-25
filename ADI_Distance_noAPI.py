@@ -10,9 +10,9 @@ import math
 # User input for configuration
 GOOGLE_MAPS_API_KEY = input("Enter your Google Maps API Key: ")
 TARGET_ADDRESS = input("Enter the target address: ")
-DATA_EXCEL_FILE_PATH = 'path to data xlsx'
-PARENT_FOLDER_SHAPEFILES = 'path to folder containing the state shapefiles'
-ADI_LOOKUP_CSV_PATH = 'path to ADI table'
+DATA_EXCEL_FILE_PATH = 'data.xlsx'
+PARENT_FOLDER_SHAPEFILES = '/Users/andrewtran/repos/GitHub/Distance_ADI_Public/toFIPS'
+ADI_LOOKUP_CSV_PATH = '/Users/andrewtran/repos/GitHub/Distance_ADI_Public/US_2021_ADI_Census_Block_Group_v4_0_1.csv'
 OUTPUT_EXCEL_FILE_PATH = 'output.xlsx'
 
 # Initialize Google Maps client
