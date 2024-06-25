@@ -5,15 +5,15 @@ import requests
 import math
 from concurrent.futures import ThreadPoolExecutor
 import os
+import time
 
 # User input for configuration
 GOOGLE_MAPS_API_KEY = input("Enter your Google Maps API Key: ")
 TARGET_ADDRESS = input("Enter the target address: ")
 
-
 # Set the paths to the data, ADI lookup CSV, and the output Excel file in the same folder as the script
 script_dir = os.path.dirname(os.path.abspath(__file__))
-DATA_EXCEL_FILE_PATH = os.path.join(script_dir,"data.xlsx")
+DATA_EXCEL_FILE_PATH = os.path.join(script_dir, "data.xlsx")
 ADI_LOOKUP_CSV_PATH = os.path.join(script_dir, 'US_2021_ADI_Census_Block_Group_v4_0_1.csv')
 OUTPUT_EXCEL_FILE_PATH = os.path.join(script_dir, 'Updated_with_distance_ADI.xlsx')
 
@@ -32,7 +32,7 @@ def geocode_address(address):
             return location['lng'], location['lat']
     except Exception as e:
         print(f"Error geocoding {address}: {e}")
-        return None, None
+    return None, None
 
 # Function to convert latitude and longitude to Web Mercator projection
 def lat_lng_to_web_mercator(lng, lat):
@@ -41,8 +41,8 @@ def lat_lng_to_web_mercator(lng, lat):
     web_mercator_lat = web_mercator_lat * 20037508.34 / 180.0
     return web_mercator_lng, web_mercator_lat
 
-# Function to query TIGERweb API for FIPS code
-def query_tigerweb_api(lng, lat):
+# Function to query TIGERweb API for FIPS code with retry logic
+def query_tigerweb_api(lng, lat, retries=3, backoff_factor=0.3):
     web_mercator_lng, web_mercator_lat = lat_lng_to_web_mercator(lng, lat)
     url = (
         "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Tracts_Blocks/MapServer/5/query"
@@ -55,12 +55,17 @@ def query_tigerweb_api(lng, lat):
         "&inSR=3857"
         "&outSR=3857"
     )
-    response = requests.get(url)
-    data = response.json()
-    if 'features' in data and len(data['features']) > 0:
-        return data['features'][0]['attributes']['GEOID']
-    else:
-        return None
+    
+    for attempt in range(retries):
+        try:
+            response = requests.get(url, timeout=10)
+            data = response.json()
+            if 'features' in data and len(data['features']) > 0:
+                return data['features'][0]['attributes']['GEOID']
+        except requests.exceptions.RequestException as e:
+            print(f"Error querying TIGERweb API: {e}")
+            time.sleep(backoff_factor * (2 ** attempt))  # Exponential backoff
+    return None
 
 # Function to check if an address is a PO Box
 def is_po_box(address):
@@ -80,7 +85,7 @@ def get_distance(source_address, target_address):
 # Geocode each address with ThreadPoolExecutor
 with ThreadPoolExecutor(max_workers=10) as executor:
     geocode_results = list(executor.map(geocode_address, data_df['Address']))
-    data_df['Longitude'], data_df['Latitude'] = zip(*geocode_results)
+    data_df['Longitude'], data_df['Latitude'] = zip(*[(lng, lat) if lng is not None and lat is not None else (None, None) for lng, lat in geocode_results])
 
 # Filter out any addresses that couldn't be geocoded
 data_df = data_df.dropna(subset=['Longitude', 'Latitude'])
