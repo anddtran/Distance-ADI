@@ -25,6 +25,8 @@ data_df = pd.read_excel(DATA_EXCEL_FILE_PATH, engine='openpyxl')
 
 # Function to geocode addresses
 def geocode_address(address):
+    if pd.isna(address):
+        return None, None
     try:
         geocode_result = gmaps.geocode(address)
         if geocode_result:
@@ -43,6 +45,8 @@ def lat_lng_to_web_mercator(lng, lat):
 
 # Function to query TIGERweb API for FIPS code with retry logic
 def query_tigerweb_api(lng, lat, retries=3, backoff_factor=0.3):
+    if lng is None or lat is None:
+        return None
     web_mercator_lng, web_mercator_lat = lat_lng_to_web_mercator(lng, lat)
     url = (
         "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Tracts_Blocks/MapServer/5/query"
@@ -69,11 +73,15 @@ def query_tigerweb_api(lng, lat, retries=3, backoff_factor=0.3):
 
 # Function to check if an address is a PO Box
 def is_po_box(address):
+    if not isinstance(address, str):
+        return False
     po_box_pattern = r'\b[P|p][.|\s]*[O|o][.|\s]*[B|b][O|o|0][X|x]\b|\b[P|p][O|o|0][S|s][T|t][.|\s]*[O|o][F|f|0][F|f][I|i][Cc][E|e]\b|\b[P|p][O|o|0][S|s][T|t][.|\s]*[B|b][O|o|0][X|x]\b'
     return re.search(po_box_pattern, address) is not None
 
 # Function to fetch distance
 def get_distance(source_address, target_address):
+    if pd.isna(source_address):
+        return None
     try:
         distance_result = gmaps.distance_matrix(source_address, target_address, mode="driving", units='imperial')['rows'][0]['elements'][0]
         distance = distance_result['distance']['text']
@@ -85,10 +93,7 @@ def get_distance(source_address, target_address):
 # Geocode each address with ThreadPoolExecutor
 with ThreadPoolExecutor(max_workers=10) as executor:
     geocode_results = list(executor.map(geocode_address, data_df['Address']))
-    data_df['Longitude'], data_df['Latitude'] = zip(*[(lng, lat) if lng is not None and lat is not None else (None, None) for lng, lat in geocode_results])
-
-# Filter out any addresses that couldn't be geocoded
-data_df = data_df.dropna(subset=['Longitude', 'Latitude'])
+    data_df['Longitude'], data_df['Latitude'] = zip(*geocode_results)
 
 # Query TIGERweb API for each geocoded address with ThreadPoolExecutor
 with ThreadPoolExecutor(max_workers=10) as executor:
