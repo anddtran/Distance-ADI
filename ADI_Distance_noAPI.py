@@ -10,10 +10,12 @@ import math
 # User input for configuration
 GOOGLE_MAPS_API_KEY = input("Enter your Google Maps API Key: ")
 TARGET_ADDRESS = input("Enter the target address: ")
-DATA_EXCEL_FILE_PATH = 'data.xlsx'
-PARENT_FOLDER_SHAPEFILES = '/Users/andrewtran/repos/GitHub/Distance_ADI_Public/toFIPS'
-ADI_LOOKUP_CSV_PATH = '/Users/andrewtran/repos/GitHub/Distance_ADI_Public/US_2021_ADI_Census_Block_Group_v4_0_1.csv'
-OUTPUT_EXCEL_FILE_PATH = 'output.xlsx'
+# Set the paths to the data files in the same folder as the script
+script_dir = os.path.dirname(os.path.abspath(__file__))
+DATA_EXCEL_FILE_PATH = os.path.join(script_dir, "data.xlsx")
+PARENT_FOLDER_SHAPEFILES = os.path.join(script_dir, "toFIPS")
+ADI_LOOKUP_CSV_PATH = os.path.join(script_dir, 'US_2021_ADI_Census_Block_Group_v4_0_1.csv')
+OUTPUT_EXCEL_FILE_PATH = os.path.join(script_dir, 'Updated_with_distance_ADI.xlsx')
 
 # Initialize Google Maps client
 gmaps = googlemaps.Client(key=GOOGLE_MAPS_API_KEY)

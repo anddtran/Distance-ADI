@@ -98,6 +98,25 @@ The output file will be named `Updated_with_distance_ADI.xlsx` or as specified i
 - All scripts use multi-threading for improved performance
 - Error handling is implemented for geocoding and API requests
 
+## Security Best Practices
+
+### API Keys
+- Never commit API keys to version control
+- Use environment variables or secure configuration files to store API keys
+- Restrict API key permissions to only the required services
+- Regularly rotate API keys if possible
+
+### Data Privacy
+- Do not commit any files containing real addresses or personal information
+- Use sample data that doesn't contain sensitive information
+- The sample data.xlsx file is gitignored by default
+- Output files (Updated_with_distance_ADI.xlsx) are also gitignored
+
+### ADI Dataset Usage
+- The US_2021_ADI_Census_Block_Group_v4_0_1.csv file is not included in this repository
+- Users must download this file from [Neighborhood Atlas](https://www.neighborhoodatlas.medicine.wisc.edu/)
+- Follow Neighborhood Atlas terms of use and data citation requirements
+
 ## Choosing the Right Script
 
 1. Choose `localrun.py` if you:

@@ -1,0 +1,38 @@
+# API keys and sensitive data
+*.env
+config.json
+
+# Sample data files
+data.xlsx
+output.xlsx
+Updated_with_distance_ADI.xlsx
+
+# Python virtual environment
+venv/
+env/
+.env/
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Large data files
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.xml
+
+# ADI Dataset
+US_2021_ADI_Census_Block_Group_v4_0_1.csv
