@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "Bash(python:*)",
+      "Bash(pip install:*)",
+      "Bash(unzip:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(mkdir:*)",
+      "Bash(cd \"/Users/andrewtran/repos/GitHub/Distance_ADI_Public/data/reference\")",
+      "Bash(curl -L \"https://www2.census.gov/geo/tiger/TIGER2023/ADDRFEAT/tl_2023_05119_addrfeat.zip\" -o pulaski_county_addrfeat.zip)",
+      "Bash(mv:*)",
+      "Bash(__NEW_LINE__ for zip_file in *.zip)",
+      "Bash(do)",
+      "Bash(echo:*)",
+      "Bash(done)",
+      "Bash(__NEW_LINE__ mv compare_geocoding.py geocoding_comparison_api.py)",
+      "Bash(rm:*)",
+      "Bash(__NEW_LINE__ mv ADI_Distance.py api_methods/)",
+      "Bash(grep:*)",
+      "Bash(timeout:*)"
+    ],
+    "deny": []
+  }
+}

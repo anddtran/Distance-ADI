@@ -36,3 +36,6 @@ Thumbs.db
 
 # ADI Dataset
 US_2021_ADI_Census_Block_Group_v4_0_1.csv
+
+# Reference data folder
+data/reference/
