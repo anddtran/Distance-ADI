@@ -1,0 +1,25 @@
+# OSM Geocoding Requirements
+# Core dependencies for OpenStreetMap-based geocoding
+
+# Existing dependencies (should already be installed)
+pandas>=1.3.0
+geopandas>=0.10.0
+geopy>=2.2.0
+usaddress>=0.5.0
+openpyxl>=3.0.0
+shapely>=1.8.0
+
+# New OSM-specific dependencies
+osmium>=3.2.0          # Fast OSM data processing
+pyosmium>=3.2.0        # Python bindings for osmium
+osmnx>=1.2.0           # OSM network analysis and routing
+networkx>=2.6.0        # Graph algorithms for routing
+rtree>=1.0.0           # Spatial indexing for fast lookups
+
+# Optional database support (for advanced users)
+# psycopg2-binary>=2.9.0  # PostgreSQL connection (if using PostGIS)
+# sqlalchemy>=1.4.0       # Database ORM
+
+# Development and testing
+pytest>=6.0.0          # Testing framework
+pytest-cov>=3.0.0      # Coverage reporting

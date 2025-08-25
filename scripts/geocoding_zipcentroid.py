@@ -77,7 +77,7 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(script_dir)
 DATA_EXCEL_FILE_PATH = os.path.join(project_root, "data", "input", "data.xlsx")
 ADI_LOOKUP_CSV_PATH = os.path.join(project_root, "data", "reference", 'US_2021_ADI_Census_Block_Group_v4_0_1.csv')
-SHAPEFILE_PATH = os.path.join(project_root, "shapefiles", "cb_2020_us_bg_500k.shp")
+SHAPEFILE_PATH = os.path.join(project_root, "data", "reference", "shapefiles", "cb_2020_us_bg_500k.shp")
 
 # Generate output filename with timestamp
 timestamp = datetime.now().strftime("%Y%m%d")

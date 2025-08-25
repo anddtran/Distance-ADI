@@ -1,16 +1,17 @@
 # Distance ADI Analysis Project
 
-This project calculates distances between addresses and determines Area Deprivation Index (ADI) rankings and Child Opportunity Index (COI) metrics using multiple geocoding methods. The system has been completely redesigned to work **offline** without requiring external API calls for privacy, reliability, and research compliance.
+This project calculates distances between addresses and determines Area Deprivation Index (ADI) rankings and Child Opportunity Index (COI) metrics using **four comprehensive geocoding approaches**. The system has been completely redesigned to work **offline** without requiring external API calls for privacy, reliability, and research compliance.
 
 ## 🚀 What We Built
 
 ### Major Improvements Made:
 1. **🔒 Privacy & Security**: Eliminated all external API dependencies 
-2. **📊 Multiple Geocoding Methods**: ZIP centroid + Street-level ADDRFEAT options
-3. **🗂️ Comprehensive Multi-State Coverage**: 385 ADDRFEAT files across Arkansas + 6 surrounding states
-4. **📈 Accuracy Testing**: Built validation tools to verify geocoding precision
-5. **⚡ Performance**: No rate limits, network delays, or connectivity requirements
-6. **🎯 Maximum Coverage Achieved**: All available counties downloaded with smart batch processing
+2. **📊 Four Geocoding Methods**: ZIP centroid + ADDRFEAT + **NEW OpenStreetMap** + Legacy API options
+3. **🗂️ Comprehensive Multi-State Coverage**: 385 ADDRFEAT files + OSM data across Arkansas + 6 surrounding states
+4. **🛣️ Road Network Routing**: NEW - Calculate actual driving distances and travel times using OSM
+5. **📈 Accuracy Testing**: Built validation tools to verify geocoding precision across all methods
+6. **⚡ Performance**: No rate limits, network delays, or connectivity requirements
+7. **🎯 Maximum Coverage Achieved**: All available counties downloaded with smart batch processing
 
 ## Project Structure
 
@@ -28,6 +29,25 @@ Distance_ADI_Public/
 │       ├── ADI_Distance_noAPI.py     # 📜 Legacy version (Google Maps)
 │       ├── geocoding_comparison_api.py # 🔄 API vs local comparison
 │       └── README.md                 # ⚠️ Warning about API methods
+├── osm_geocoding/                    # 🗺️ NEW: OpenStreetMap geocoding system (~1.4GB data)
+│   ├── scripts/                      # OSM geocoding & routing engines
+│   │   ├── osm_geocoder.py           # 🎯 OSM address geocoding engine
+│   │   ├── osm_routing.py            # 🛣️ Road network distance calculator
+│   │   └── osm_distance_calculator.py # 🔧 Complete OSM workflow
+│   ├── setup/                        # Installation & data management
+│   │   ├── download_osm_data.py      # 📥 Automated OSM data downloader
+│   │   ├── install.py                # 🔧 Dependency installer
+│   │   └── requirements.txt          # 📋 OSM-specific dependencies
+│   ├── tests/                        # Testing & validation framework
+│   │   ├── test_osm_geocoding.py     # 🧪 OSM accuracy testing
+│   │   └── compare_methods.py        # 📊 Method comparison tool
+│   ├── docs/                         # OSM documentation
+│   │   ├── osm_data_sources.md       # 📚 Data source documentation
+│   │   └── usage_guide.md            # 📖 Complete usage guide
+│   └── data/                         # OSM data storage (auto-created)
+│       ├── osm_extracts/             # Downloaded OSM PBF files (7 states)
+│       ├── processed/                # Processed & cached data
+│       └── output/                   # OSM method results
 ├── data/
 │   ├── input/                        # Input data files
 │   │   └── data.xlsx                 # Your address data to process
@@ -48,9 +68,9 @@ Distance_ADI_Public/
 │       ├── results_zipcentroid_YYYYMMDD.xlsx          # ZIP centroid results
 │       ├── results_addrfeat_YYYYMMDD.xlsx             # ADDRFEAT results
 │       └── accuracy_validation_YYYYMMDD.xlsx          # Accuracy reports
-└── shapefiles/                       # Geographic data
-    ├── cb_2020_us_bg_500k.shp       # Census block groups
-    └── ...                          # Supporting shapefile components
+│   │   └── shapefiles/                # Geographic data
+│   │       ├── cb_2020_us_bg_500k.shp # Census block groups
+│   │       └── ...                    # Supporting shapefile components
 ```
 
 ## 🌟 Recommended Method: ZIP Code Centroid (`geocoding_zipcentroid.py`)
@@ -108,6 +128,60 @@ python geocoding_addrfeat.py
 # Enter target address when prompted
 ```
 
+## 🗺️ NEW: OpenStreetMap Method (`osm_geocoding/`)
+
+**Enhanced geocoding with road network routing capabilities**
+
+### Features:
+- ✅ **Street-Level Geocoding**: OSM address matching with multiple strategies
+- ✅ **Road Network Routing**: Calculate actual driving distances and travel times
+- ✅ **Enhanced Coverage**: Daily-updated OSM data with community contributions
+- ✅ **Multiple Distance Metrics**: Geodesic + road network + travel time estimates
+- ✅ **Speed Limit Integration**: Travel time calculations based on actual speed limits
+- ✅ **Completely Offline**: No API calls during operation (download data once)
+- ✅ **Performance Caching**: Graph caching and distance result caching
+
+### Unique Capabilities:
+- **🛣️ Road Network Analysis**: Unlike other methods, provides actual driving routes
+- **⏱️ Travel Time Estimation**: Calculate realistic travel times with speed limits
+- **🎯 Enhanced Accuracy**: Street-level precision with building and POI matching
+- **📅 Current Data**: Daily OSM updates vs static government datasets
+- **🔄 Fallback Integration**: Works with existing ZIP centroid method
+
+### Coverage Areas:
+**Multi-state OSM coverage (7 states, ~1.4GB total):**
+- **Arkansas**: Complete state coverage (primary research area)
+- **Tennessee**: Complete state coverage  
+- **Mississippi**: Complete state coverage
+- **Louisiana**: Complete state coverage
+- **Texas**: Complete state coverage
+- **Oklahoma**: Complete state coverage
+- **Missouri**: Complete state coverage
+
+### Quick Start:
+```bash
+# Install OSM dependencies
+cd osm_geocoding/setup/
+python install.py --minimal
+
+# Download Arkansas data
+python download_osm_data.py --state arkansas
+
+# Test accuracy
+cd ../tests/
+python test_osm_geocoding.py
+
+# Run complete workflow
+cd ../scripts/
+python osm_distance_calculator.py
+```
+
+### Advanced Features:
+- **Method Comparison**: Built-in testing framework to compare with existing methods
+- **Batch Processing**: Efficient processing of large address datasets
+- **Route Visualization**: Optional route coordinate extraction
+- **Performance Monitoring**: Detailed timing and success rate statistics
+
 ## 📊 Accuracy Validation (`geocoding_accuracy_test.py`)
 
 **Test and validate geocoding accuracy**
@@ -157,6 +231,24 @@ Same as above plus:
 |--------|-------------|
 | Geocoding_Method | "ADDRFEAT" or "ZIP_CENTROID" (fallback) |
 
+### `results_osm_geocoding_YYYYMMDD.xlsx`
+OSM method output with enhanced features:
+| Column | Description |
+|--------|-------------|
+| MRN | Original identifier from your data |
+| Address | Original address text |
+| Longitude | Geocoded longitude coordinate |
+| Latitude | Geocoded latitude coordinate |
+| Geocoding_Method | "osm_address", "osm_street", "osm_building", or "zip_centroid_fallback" |
+| Geocoding_Confidence | Confidence score (0.0-1.0) |
+| FIPS | Census block group FIPS code |
+| ADI_NATRANK | National ADI ranking (1-100, higher = more disadvantaged) |
+| ADI_STATERNK | State ADI ranking (1-10, higher = more disadvantaged) |
+| Distance_Geodesic_Miles | Straight-line distance to target |
+| **Distance_Road_Miles** | **Road network distance (NEW)** |
+| **Travel_Time_Minutes** | **Estimated travel time (NEW)** |
+| Distance_Method | "geodesic" or "road_network" |
+
 ### `accuracy_validation_YYYYMMDD.xlsx`
 | Column | Description |
 |--------|-------------|
@@ -167,26 +259,41 @@ Same as above plus:
 
 ## 🔍 Method Comparison
 
-| Method | Accuracy | Coverage | Speed | Offline | Use Case |
-|--------|----------|----------|-------|---------|----------|
-| **ZIP Centroid** | Good (0.5-2 mi) | All US | Fast | ✅ Yes | **Recommended for most research** |
-| **ADDRFEAT** | Excellent (<0.1 mi) | 385 counties across 7 states | Medium | ✅ Yes | **High-precision multi-state research** |
-| **Legacy API** | Excellent | Global | Slow | ❌ No | ⚠️ Located in `api_methods/` (not recommended) |
+| Method | Accuracy | Coverage | Speed | Offline | Special Features | Use Case |
+|--------|----------|----------|-------|---------|------------------|----------|
+| **🌟 ZIP Centroid** | Good (0.5-2 mi) | All US | Fast | ✅ Yes | Simple, reliable | **Recommended for most research** |
+| **🎯 ADDRFEAT** | Excellent (<0.1 mi) | 385 counties across 7 states | Medium | ✅ Yes | Street-level precision | **High-precision multi-state research** |
+| **🗺️ OSM Method** | Excellent (<0.1 mi) | 7-state OSM coverage | Medium | ✅ Yes | **Road routing + travel times** | **Enhanced analysis with driving distances** |
+| **⚠️ Legacy API** | Excellent | Global | Slow | ❌ No | Real-time but costly | Located in `api_methods/` (not recommended) |
 
 ## 🛠️ Installation & Setup
 
-### Dependencies:
+### Core Dependencies (ZIP Centroid & ADDRFEAT):
 ```bash
 pip install pandas geopandas geopy usaddress openpyxl
 ```
 
+### OSM Method Dependencies:
+```bash
+# Install OSM-specific packages
+cd osm_geocoding/setup/
+python install.py --minimal
+
+# Or install manually:
+pip install osmium pyosmium osmnx networkx rtree
+```
+
 ### Data Requirements:
-✅ **Already Included:**
+✅ **Already Included (Core Methods):**
 - Census ZIP code centroids (all US)
 - ADI lookup data (2021)
 - COI lookup data (Child Opportunity Index)
 - Census block group shapefiles
 - **Comprehensive ADDRFEAT coverage: 385 files across Arkansas + 6 surrounding states**
+
+📥 **OSM Data (Download Required, ~1.4GB):**
+- OpenStreetMap extracts for 7 states (daily updated)
+- Automatic download via: `python osm_geocoding/setup/download_osm_data.py --all`
 
 ✅ **Your Input:**
 - Excel file with 'Address' column (`data/input/data.xlsx`)
@@ -199,6 +306,9 @@ This tool is perfect for:
 - **Academic Research**: Studying socioeconomic factors, health outcomes, and child development
 - **Policy Analysis**: Evaluating geographic equity in service delivery and child opportunity
 - **Urban Planning**: Assessing neighborhood characteristics and development opportunities
+- **🆕 Transportation Research**: Analyzing actual travel times and accessibility (OSM method)
+- **🆕 Service Area Analysis**: Determining realistic service catchment areas with drive times (OSM method)
+- **🆕 Emergency Planning**: Understanding response times and route optimization (OSM method)
 
 ## 🚨 Key Advantages
 
@@ -210,18 +320,54 @@ This tool is perfect for:
 
 ## 📞 Getting Started
 
+### Quick Start - Choose Your Method:
+
+#### 🌟 **ZIP Centroid** (Recommended for Most Users)
+```bash
+cd scripts/
+python geocoding_zipcentroid.py
+# Enter target address when prompted
+```
+
+#### 🎯 **ADDRFEAT** (High Precision)
+```bash
+cd scripts/  
+python geocoding_addrfeat.py
+# Enter target address when prompted
+```
+
+#### 🗺️ **OSM Method** (NEW - Enhanced Features)
+```bash
+# One-time setup
+cd osm_geocoding/setup/
+python install.py --minimal
+python download_osm_data.py --state arkansas
+
+# Run analysis
+cd ../scripts/
+python osm_distance_calculator.py
+# Enter target address and follow prompts
+```
+
+#### ⚠️ **Legacy API Methods** (Not Recommended)
+- Located in `scripts/api_methods/` folder
+- Require external API keys and have privacy/cost concerns
+- Use offline methods instead
+
+### Data Preparation:
 1. **Prepare your data**: Place Excel file with 'Address' column in `data/input/data.xlsx`
-2. **Choose your method**: 
-   - Most users: `python geocoding_zipcentroid.py`
-   - High precision needs: `python geocoding_addrfeat.py`
-   - ⚠️ **Avoid**: Scripts in `api_methods/` folder (privacy/reliability issues)
+2. **Choose your method** based on your needs (see comparison table above)
 3. **Enter target address** when prompted
 4. **Review results** in `data/output/` folder
 
 ## 🤔 FAQ
 
 **Q: Which method should I use?**
-A: For most research, ZIP centroid provides excellent accuracy (0.5-2 miles) and works everywhere. Use ADDRFEAT only if you need street-level precision and your addresses are in covered areas.
+A: 
+- **ZIP Centroid**: Most research (0.5-2 miles accuracy, works everywhere)
+- **ADDRFEAT**: Street-level precision needed in covered areas  
+- **OSM Method**: Enhanced analysis with driving distances and travel times
+- **API Methods**: Avoid due to privacy/cost concerns
 
 **Q: How accurate is ZIP centroid geocoding?**
 A: Typically within 0.5-2 miles, which is excellent for ADI analysis since census block groups cover 1-4 square miles.
@@ -234,6 +380,12 @@ A: The system uses a two-tier approach: ADDRFEAT (street-level) for covered area
 
 **Q: Is this suitable for research publication?**
 A: Yes! The methods use official Census Bureau data and provide reproducible results suitable for academic research.
+
+**Q: What are the advantages of the OSM method?**
+A: The OSM method provides road network routing for actual driving distances, travel time estimates, and enhanced geocoding accuracy with daily-updated data. Perfect for transportation and accessibility research.
+
+**Q: How much disk space does OSM data require?**
+A: Approximately 1.4GB for all 7 target states. The system automatically downloads and manages this data locally.
 
 **Q: Can I still use the API versions?**
 A: The API-dependent scripts are preserved in `scripts/api_methods/` folder, but they are NOT recommended due to privacy, cost, and reliability concerns. Use the offline methods instead.
@@ -258,13 +410,21 @@ A: The API-dependent scripts are preserved in `scripts/api_methods/` folder, but
 ## 🏆 Success Metrics
 
 Based on validation testing with comprehensive coverage:
-- **98%+ success rate** for address geocoding (two-tier system)
+- **98%+ success rate** for address geocoding (multi-tier fallback system)
 - **0.5-2 mile accuracy** for ZIP centroid method  
 - **<100 meter accuracy** for ADDRFEAT method (385 counties covered)
-- **100% privacy compliance** (no external data transmission)
+- **<100 meter accuracy** for OSM method (7-state coverage with road routing)
+- **🆕 Road network distances** available via OSM method with travel time estimates
+- **100% privacy compliance** (no external data transmission during operation)
 - **10x faster** than API-based methods for large datasets
-- **385 ADDRFEAT files** with millions of address records available
+- **385 ADDRFEAT files + 1.4GB OSM data** with comprehensive address coverage
 
 ---
 
 **Ready to get started?** Choose your geocoding method and run your first analysis!
+
+### Method Selection Guide:
+- **🌟 Start here**: ZIP Centroid for most research needs
+- **🎯 High precision**: ADDRFEAT for street-level accuracy in covered areas  
+- **🗺️ Enhanced analysis**: OSM Method for driving distances and travel times
+- **📊 Compare methods**: Use `osm_geocoding/tests/compare_methods.py`
